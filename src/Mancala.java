@@ -1,9 +1,5 @@
-import java.awt.*;
 import java.util.InputMismatchException;
-import java.util.Random;
 import java.util.Scanner;
-
-import javax.swing.*;
 public class Mancala {
     private enum Player {
         One ((board.length - 2) / 2, board.length - 1),
