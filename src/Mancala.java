@@ -1,5 +1,7 @@
 import java.util.InputMismatchException;
 import java.util.Scanner;
+
+// Defines a Mancala game
 public class Mancala {
     private enum Player {
         One ((board.length - 2) / 2, board.length - 1),
@@ -189,7 +191,7 @@ public class Mancala {
     	return winner;
     }
 
-	// Returns an integer of the score for Player m
+	// Returns an integer of the number of pieces on Player m's side of the board
     public int sum(Player m) {
     	int sum = 0;
     	int start = (m.getSkip() + 1) % board.length;
