@@ -65,7 +65,7 @@ public class Mancala {
 	        Player winner = game.getWinner();
 	        game.printBoard();
 	        game.printWin(winner);
-	        System.out.println("\nPlay Again? (Y/N)");
+	        System.out.print("\nPlay Again? (Y/N):");
 	        if (s.nextLine().equalsIgnoreCase("n")) {
 	        	playAgain = false;
 	        }
@@ -112,7 +112,6 @@ public class Mancala {
 			int landingPos = (location + board[location]) % board.length;
 			int oppositePos = getOpposite(landingPos);
 			if (board[landingPos] == 0 && board[oppositePos] > maxPieces && oppositePos != location) {
-				System.out.println(location + ", " + landingPos + ", " + board[oppositePos]);
 				maxPieces = board[oppositePos];
 				pos = location;
 			}
@@ -120,11 +119,10 @@ public class Mancala {
 
 		// We found at least one opportunity to capture pieces, let's return it
 		if (maxPieces > 0) {
-			System.out.println("Heuehehehe I found a way to capture your pieces!");
+			System.out.println("All your pieces are belong to me!");
 			return pos;
 		}
 		// No particular location looks advantageous. Just return a random location
-		System.out.println("Dang, nothing looks good!");
 		return validLocations.get(new Random().nextInt(validLocations.size()));
     }
 
