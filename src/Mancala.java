@@ -19,17 +19,15 @@ public class Mancala {
         int getSkip() {
         	return kalahSkip;
         }
-        
+
     }
     private static int[] board;
     private Player turn;
     private final int STARTING_AMOUNT = 4;
     private boolean computer;
- 
+
     public static void main(String[] args) throws InterruptedException {
     	Mancala game = new Mancala();
-//    	BasicGui gui = new BasicGui();
-//        gui.launchFrame();
     	System.out.println("  -----------------------");
     	System.out.println("  --------Mancala--------");
     	System.out.println("  -----------------------");
@@ -44,7 +42,8 @@ public class Mancala {
         	}
     		game.reset();
         	game.printBoard();
-	        while (!game.isOver()) { //game play
+			// Game loop
+	        while (!game.isOver()) {
 	        	boolean again = true;
 		        while (again) {
 			        int position = 0;
@@ -53,7 +52,7 @@ public class Mancala {
 				        Thread.sleep(1800);
 				        position = game.choose();
 			        } else {
-			        	System.out.print("Player "+game.getTurn()+", choose which pile to take (1-6):");
+			        	System.out.print("Player " + game.getTurn() + ", choose which pile to take (1-6):");
 			        	position = game.readValue();
 			        }
 		        	again = game.markBoard(position);
@@ -70,15 +69,22 @@ public class Mancala {
 	        	playAgain = false;
 	        }
     	}
-    }    
+    }
+
+	// Create a game object
     public Mancala() {
     	board = new int[14];
     	turn = Player.One;
     }
+
+	// Get the current turn
+	// Returns the Player who has the current turn
     public Player getTurn() {
-    	return turn;
+		return turn;
     }
-    
+
+	// Chooses a location for the computer to play
+	// Returns an integer of the location
     public int choose() {
     	boolean valid = false;
     	int location = 0;
@@ -91,7 +97,8 @@ public class Mancala {
     	}
     	return location;
     }
-    
+
+	// Switches the turn from Player One to Player two
     public void switchTurn() {
     	if (turn == Player.One) {
     		turn = Player.Two;
@@ -99,6 +106,8 @@ public class Mancala {
     		turn = Player.One;
     	}
     }
+
+	// Prints the winner of the game
     public void printWin(Player winner) {
     	if (winner == Player.One) {
         	if (computer) {
@@ -116,7 +125,8 @@ public class Mancala {
         	System.out.println("The game is a tie!");
         }
     }
-    
+
+	// Resets the game board
     public void reset() {
     	for (int i = 0; i < board.length; i++) {
     		board[i] = STARTING_AMOUNT;
@@ -126,7 +136,8 @@ public class Mancala {
     	}
     	turn = Player.One;
     }
-    
+
+	// Prints the current game state
     public void printBoard() {
     	if (!computer) {
         	System.out.println("    (1) (2) (3) (4) (5) (6) ");
@@ -148,15 +159,15 @@ public class Mancala {
     	System.out.println("-------------------------------");
     	System.out.println("    (1) (2) (3) (4) (5) (6) ");
     }
-    
-    //returns true if the game is over (one side has no pieces)
+
+    // Returns true if the game is over (one side has no pieces)
     public boolean isOver() {
     	return sum(Player.One) == 0 || sum(Player.Two) == 0;
     }
-    
-    //checks if a player has won
-    //returns null if the game isn't over or the game is a tie
-    public Player getWinner() { 
+
+    // Checks if a player has won
+    // Returns null if the game isn't over or the game is a tie
+    public Player getWinner() {
     	Player winner = null;
     	if (isOver()) {
     		for (Player p : Player.values()) {
@@ -177,7 +188,8 @@ public class Mancala {
     	}
     	return winner;
     }
-    
+
+	// Returns an integer of the score for Player m
     public int sum(Player m) {
     	int sum = 0;
     	int start = (m.getSkip() + 1) % board.length;
@@ -186,17 +198,18 @@ public class Mancala {
     	}
     	return sum;
     }
-    
-    //carries out a move for the player of the current turn
-    public boolean markBoard(int pos) { 
+
+    // Carries out a move for the player of the current turn
+	// Returns true if the player gets to go again (landed in the kalah)
+    public boolean markBoard(int pos) {
 		int handAmount = board[pos];
 		board[pos] = 0;
 		while (handAmount > 0) {
 			pos = (pos + 1) % board.length;
 			handAmount--;
 			if (pos == turn.getSkip()) {
-				pos = (pos + 1) % board.length;	
-			} 
+				pos = (pos + 1) % board.length;
+			}
 			board[pos]++;
 		}
 		boolean taken = false;
@@ -215,10 +228,10 @@ public class Mancala {
 		}
 		return false;
     }
-    
-    //reads a value from a scanner in the console
+
+    // Reads a value from a scanner in the console
     public int readValue() {
-    	Scanner s = new Scanner(System.in); 
+    	Scanner s = new Scanner(System.in);
     	int position = 2;
     	boolean valid = false;
         while (!valid) {
@@ -240,10 +253,10 @@ public class Mancala {
          		}
      		}
      		catch (InputMismatchException e) {
+				s.next(); // Throw away the offending input
      			System.out.println("Invalid Position, input again:");
      		}
          }
          return position;
     }
-
 }
