@@ -1,0 +1,2 @@
+To run via the exe, double click on it in a windows environment. To run on Mac OS X or Linux, run the run.bat file by writing bash run.bat, or ./run.bat. If this doesn't work, try running the jar from the commandline by typing 'java -jar Mancala*.jar'
+

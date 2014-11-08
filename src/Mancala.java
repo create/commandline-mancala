@@ -1,5 +1,4 @@
-import java.util.InputMismatchException;
-import java.util.Scanner;
+import java.util.*;
 
 // Defines a Mancala game
 public class Mancala {
@@ -88,16 +87,45 @@ public class Mancala {
 	// Chooses a location for the computer to play
 	// Returns an integer of the location
     public int choose() {
+		Player computer = Player.Two;
     	boolean valid = false;
-    	int location = 0;
-    	while (!valid) {
-        	location = (board.length / 2 ) + (int)(Math.random() *
-        			((board.length - 2 - (board.length / 2)) + 1));
-        	if (board[location] != 0) {
-        		valid = true;
-        	}
-    	}
-    	return location;
+		List<Integer> validLocations = new ArrayList<Integer>();
+		int start = (computer.getSkip() + 1) % board.length;
+		for (int i = start; i < start + (board.length - 1) / 2; i++) {
+			if (board[i] > 0) {
+				validLocations.add(i);
+			}
+		}
+
+		// If any location lets us go again, return the first we find
+		for (int location : validLocations) {
+			if ((location + board[location]) % board.length == computer.getKalahLoc()) {
+				System.out.println("Spiffy! I get to go again!");
+				return location;
+			}
+		}
+
+		// If any location lets us capture pieces, return the one that gives us the most pieces
+		int maxPieces = 0;
+		int pos = validLocations.get(0);
+		for (int location : validLocations) {
+			int landingPos = (location + board[location]) % board.length;
+			int oppositePos = getOpposite(landingPos);
+			if (board[landingPos] == 0 && board[oppositePos] > maxPieces && oppositePos != location) {
+				System.out.println(location + ", " + landingPos + ", " + board[oppositePos]);
+				maxPieces = board[oppositePos];
+				pos = location;
+			}
+		}
+
+		// We found at least one opportunity to capture pieces, let's return it
+		if (maxPieces > 0) {
+			System.out.println("Heuehehehe I found a way to capture your pieces!");
+			return pos;
+		}
+		// No particular location looks advantageous. Just return a random location
+		System.out.println("Dang, nothing looks good!");
+		return validLocations.get(new Random().nextInt(validLocations.size()));
     }
 
 	// Switches the turn from Player One to Player two
@@ -120,6 +148,7 @@ public class Mancala {
         } else if (winner == Player.Two) {
         	if (computer) {
         		System.out.println("The computer beat you!");
+				System.out.println("It says: too hard? :)");
         	} else {
 	        	System.out.println("Player Two WINS!");
         	}
@@ -201,6 +230,7 @@ public class Mancala {
     	return sum;
     }
 
+	// Accepts an integer position of the index of the board (0 based index)
     // Carries out a move for the player of the current turn
 	// Returns true if the player gets to go again (landed in the kalah)
     public boolean markBoard(int pos) {
@@ -215,10 +245,10 @@ public class Mancala {
 			board[pos]++;
 		}
 		boolean taken = false;
-		if (pos != turn.getKalahLoc() && board[pos] == 1 && board[board.length - 2 - pos] != 0) {
-				board[turn.getKalahLoc()] += board[pos] + board[board.length - 2 - pos];
+		if (pos != turn.getKalahLoc() && board[pos] == 1 && board[getOpposite(pos)] != 0) {
+				board[turn.getKalahLoc()] += board[pos] + board[getOpposite(pos)];
 				board[pos] = 0;
-				board[board.length - 2 - pos] = 0;
+				board[getOpposite(pos)] = 0;
 				taken = true;
 		}
 		printBoard();
@@ -230,6 +260,11 @@ public class Mancala {
 		}
 		return false;
     }
+
+	// Returns index of the opposite position on the board
+	private int getOpposite(int pos) {
+		return board.length - 2 - pos;
+	}
 
     // Reads a value from a scanner in the console
     public int readValue() {

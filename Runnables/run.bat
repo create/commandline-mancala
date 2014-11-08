@@ -1,1 +1,1 @@
-java -jar Mancala.jar
+java -jar Mancala*.jar
